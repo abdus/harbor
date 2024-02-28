@@ -1,5 +1,6 @@
 use crate::algorithms;
 use once_cell::sync::Lazy;
+use rand::Rng;
 use std::sync::Mutex;
 
 #[derive(Debug)]
@@ -51,7 +52,7 @@ pub fn load_servers_from_config() {
 }
 
 pub fn get_remote_server_address() -> String {
-    let algo = "round_robin"; // should be read from config
+    let algo = "random"; // should be read from config
 
     match algo {
         "round_robin" => {
@@ -59,7 +60,7 @@ pub fn get_remote_server_address() -> String {
 
             if servers.is_err() {
                 println!("Error: {:?}", servers.err().unwrap());
-                return "localhost:3001".to_string();
+                return "localhost:8081".to_string();
             }
 
             let servers = servers.unwrap();
@@ -79,6 +80,20 @@ pub fn get_remote_server_address() -> String {
             println!("Selected server: {:#?}", url);
 
             url
+        }
+        "random" => {
+            let servers = unsafe { SERVERS.lock() };
+
+            if servers.is_err() {
+                println!("Error: {:?}", servers.err().unwrap());
+                return "localhost:8081".to_string();
+            }
+
+            let servers = servers.unwrap();
+            let random_server_idx = rand::thread_rng().gen_range(0..servers.len());
+            let server = servers.get(random_server_idx).unwrap();
+
+            server.url.clone()
         }
         _ => "localhost:3001".to_string(),
     }

@@ -13,14 +13,11 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +81 src/algorithms/utils.rs
-badd +102 src/main.rs
-badd +7 dummy/8081/index.html
+badd +97 src/algorithms/utils.rs
 argglobal
 %argdel
-edit dummy/8081/index.html
+edit src/algorithms/utils.rs
 argglobal
-balt src/main.rs
 setlocal fdm=expr
 setlocal fde=nvim_treesitter#foldexpr()
 setlocal fmr={{{,}}}
@@ -29,14 +26,16 @@ setlocal fdl=3
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-2
+54
 normal! zo
-let s:l = 8 - ((7 * winheight(0) + 24) / 49)
+57
+normal! zo
+let s:l = 97 - ((29 * winheight(0) + 25) / 50)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 8
-normal! 054|
+keepjumps 97
+normal! 09|
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf
