@@ -1,4 +1,5 @@
 mod algorithms;
+mod config;
 
 use std::collections::HashMap;
 use std::io::Read;

@@ -1,10 +1,10 @@
-use crate::algorithms;
+use crate::{algorithms, config};
 use once_cell::sync::Lazy;
 use rand::Rng;
-use std::sync::Mutex;
+use std::{env, sync::Mutex};
 
 #[derive(Debug)]
-struct Server {
+pub struct Server {
     pub id: i32,
     pub url: String,
     pub weight: i32,
@@ -25,26 +25,25 @@ impl Clone for Server {
 }
 
 pub fn load_servers_from_config() {
-    let servers = vec![
-        Server {
-            id: 0,
-            url: "localhost:8081".to_string(),
-            weight: 1,
-            active: true,
-        },
-        Server {
-            id: 1,
-            url: "localhost:8082".to_string(),
-            weight: 1,
-            active: true,
-        },
-        Server {
-            id: 2,
-            url: "localhost:8083".to_string(),
-            weight: 2,
-            active: true,
-        },
-    ];
+    let env = match env::var("HARBOR_CONFIG") {
+        Ok(val) => val,
+        Err(_) => "config.json".to_string(),
+    };
+
+    let config = config::load_conf::load(env.as_str());
+
+    if config.is_err() {
+        println!("Error: {:?}", config.err().unwrap());
+        panic!();
+    }
+
+    let config = config.unwrap();
+    let mut servers: Vec<Server> = Vec::new();
+
+    for server in config.servers {
+        let tmp: Server = server.into();
+        servers.push(tmp);
+    }
 
     unsafe {
         SERVERS.lock().unwrap().extend(servers);

@@ -35,6 +35,10 @@ could simply run the `./start.sh` script to start the server. The server will
 start on `localhost:8080` by default. This will also start a few backend
 servers on `localhost:8081`, `localhost:8082` and `localhost:8083`.
 
+You can pass a config file. Use environment variable `HARBOR_CONFIG` to specify
+the path to the config file. You can find an example config in the
+[config.json](./config.json) file.
+
 To test the load balancer performance (and how it performs under load), you can
 use the `siege` tool. Here is an example command to test the load balancer:
 
